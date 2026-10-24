@@ -2,6 +2,9 @@
 import Sidebar from './components/Sidebar'
 import StatCard from './components/Cards'
 import ApplicationTable from './components/ApplicationTable'
+import { useState } from 'react'
+import ApplicationForm from './components/ApplicationForm'
+import { createApplication } from './api/applications'
 
 const stats = [
   {
@@ -27,6 +30,15 @@ const stats = [
 ]
 
 export default function App() {
+
+  const [showForm, setShowForm] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  async function handleSave(application) {
+    await createApplication(application)
+    setRefreshKey((prevKey) => prevKey + 1)
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
@@ -39,7 +51,7 @@ export default function App() {
             </h2>
           </div>
 
-          <button className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold cursor-pointer text-white shadow-sm hover:bg-blue-700">
+          <button onClick={() => setShowForm(true)} className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold cursor-pointer text-white shadow-sm hover:bg-blue-700">
             + Add Application
           </button>
         </header>
@@ -50,7 +62,14 @@ export default function App() {
           ))}
         </section>
 
-        <ApplicationTable />
+        <ApplicationTable key={refreshKey} />
+
+        {showForm && (
+          <ApplicationForm 
+            onClose={() => setShowForm(false)}
+            onSave={handleSave}
+            />
+        )}
       </main>
     </div>
   )
