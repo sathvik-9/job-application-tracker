@@ -528,5 +528,3 @@ This project provides practical experience with:
 ---
 
 **Status:** Development in progress.
-
-**License:** Add a license if you intend to distribute or publish this project publicly.
